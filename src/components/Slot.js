@@ -21,46 +21,48 @@ const Slot = ({ item, placeholder, onPress, onLongPress, label }) => {
 			onPress={onPress}
 			onLongPress={onLongPress}
 			activeOpacity={0.7}>
-			{shouldShowItemImage ? (
-				// CASO 1: Hay ítem equipado (Imagen Normal a color)
-				isSilhouette ? (
-					<Image
-						source={item.image}
-						onError={() => setImageError(true)}
-						style={styles.placeholderImage}
-						resizeMode="contain"
-					/>
+			<View style={styles.slotContent}>
+				{shouldShowItemImage ? (
+					isSilhouette ? (
+						<Image
+							source={item.image}
+							onError={() => setImageError(true)}
+							style={styles.placeholderImage}
+							resizeMode="contain"
+						/>
+					) : (
+						<Image
+							source={item.image}
+							onError={() => setImageError(true)}
+							style={styles.image}
+							resizeMode="contain"
+						/>
+					)
 				) : (
-					<Image
-						source={item.image}
-						onError={() => setImageError(true)}
-						style={styles.image}
-						resizeMode="contain"
-					/>
-				)
-			) : (
-				// CASO 2: Slot vacío (Mostramos el Placeholder/Silueta)
-				<View style={styles.emptyContainer}>
-					{/* Si existe un placeholder, mostramos la imagen fantasma */}
-					{placeholder && (
+					placeholder && (
 						<Image
 							source={placeholder}
 							style={styles.placeholderImage}
 							resizeMode="contain"
 						/>
-					)}
-					{/* Mantenemos el texto pequeño como guía */}
+					)
+				)}
+
+				{/* Label siempre visible debajo de la imagen */}
+				<View
+					style={styles.labelBelow}
+					pointerEvents="none">
 					<Text style={styles.label}>{label}</Text>
 				</View>
-			)}
+			</View>
 		</TouchableOpacity>
 	);
 };
 
 const styles = StyleSheet.create({
 	container: {
-		width: 80,
-		height: 80,
+		width: 100,
+		height: 100,
 		margin: 5,
 		backgroundColor: '#2b2b2b', // Fondo oscuro tipo RPG
 		borderWidth: 2,
@@ -73,7 +75,7 @@ const styles = StyleSheet.create({
 		shadowOffset: { width: 0, height: 2 },
 		shadowOpacity: 0.5,
 	},
-	image: { width: '90%', height: '90%' },
+	image: { width: '75%', height: '75%' },
 	// --- ESTILOS NUEVOS PARA EL PLACEHOLDER ---
 	emptyContainer: {
 		width: '100%',
@@ -81,16 +83,32 @@ const styles = StyleSheet.create({
 		justifyContent: 'center',
 		alignItems: 'center',
 	},
+	slotContent: {
+		width: '100%',
+		height: '100%',
+		justifyContent: 'flex-start',
+		alignItems: 'center',
+		position: 'relative',
+		paddingTop: 6,
+	},
+	labelBelow: {
+		marginTop: 6,
+		alignItems: 'center',
+		justifyContent: 'center',
+		backgroundColor: 'transparent',
+		paddingHorizontal: 4,
+		paddingVertical: 0,
+	},
 	placeholderImage: {
-		width: '60%', // Aumenta esto de 50% a 60% o 70%
-		height: '60%',
+		width: '70%',
+		height: '70%',
 		opacity: 1, // Sube un poco la opacidad (de 0.3 a 0.4 o 0.5)
 		tintColor: '#ffffff',
 		marginBottom: 4,
 	},
 	label: {
 		color: '#aaa',
-		fontSize: 10,
+		fontSize: 12,
 		fontWeight: 'bold',
 		textTransform: 'uppercase',
 	},

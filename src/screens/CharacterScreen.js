@@ -1,12 +1,10 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { View, Text, StyleSheet } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import Slot from '../components/Slot';
 import { itemsDb } from '../data/itemsDb';
 
-// --- AQUI VA LA CONSTANTE ---
 // URLs de iconos planos para usar de siluetas (Placeholders)
-// Al ponerlo fuera de la función, evitamos que se cree de nuevo en cada render
 const PLACEHOLDERS = {
 	helmet: {
 		uri: 'https://img.icons8.com/ios-filled/100/ffffff/head-profile.png',
@@ -30,15 +28,30 @@ const INITIAL_EQUIPMENT = {
 	weapon: testWeapon,
 };
 
-export default function CharacterScreen() {
+// 1. Recibimos navigation y route
+export default function CharacterScreen({ navigation, route }) {
 	const [equipped, setEquipped] = useState(INITIAL_EQUIPMENT);
 
+	// 2. EFECTO MAGICO: Escucha si regresamos del inventario con algo nuevo
+	useEffect(() => {
+		if (route.params?.itemToEquip) {
+			const { itemToEquip, slotName } = route.params;
+			setEquipped((prev) => ({ ...prev, [slotName]: itemToEquip }));
+		}
+	}, [route.params?.itemToEquip]);
+
+	// 3. NAVEGACION: Vamos a la pantalla de selección
 	const handlePress = (slotName) => {
-		console.log(`Tocaste el slot: ${slotName}`);
+		const currentItem = equipped[slotName];
+		navigation.navigate('Inventory', {
+			slotName: slotName,
+			currentEquippedId: currentItem ? currentItem.id : null,
+		});
 	};
 
 	const handleLongPress = (slotName) => {
 		console.log(`Mantuviste presionado: ${slotName}`);
+		// Aquí podrías mostrar un modal con detalles del ítem más adelante
 	};
 
 	return (
@@ -56,8 +69,6 @@ export default function CharacterScreen() {
 						onLongPress={() => handleLongPress('helmet')}
 					/>
 				</View>
-
-				{/* Fila 2: Guante Izq - Pechera - Guante Der */}
 				<View style={styles.row}>
 					<Slot
 						label="GUANTE (L)"
@@ -78,8 +89,6 @@ export default function CharacterScreen() {
 						onPress={() => handlePress('glovesR')}
 					/>
 				</View>
-
-				{/* Fila 3: Arma - Botas */}
 				<View style={styles.row}>
 					<Slot
 						label="ARMA"
@@ -93,7 +102,6 @@ export default function CharacterScreen() {
 						placeholder={PLACEHOLDERS.boots}
 						onPress={() => handlePress('boots')}
 					/>
-					{/* Espaciador invisible para centrar visualmente */}
 					<View style={{ width: 80, margin: 5 }} />
 				</View>
 			</View>
@@ -108,7 +116,6 @@ const styles = StyleSheet.create({
 		fontSize: 24,
 		fontWeight: 'bold',
 		marginVertical: 20,
-		// fontFamily: 'System',
 	},
 	characterContainer: {
 		flex: 1,
