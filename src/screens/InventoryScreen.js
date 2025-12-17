@@ -7,19 +7,19 @@ import {
 	Image,
 	StyleSheet,
 } from 'react-native';
-import { itemsDb } from '../data/itemsDb'; // Importamos tu base de datos
+import { itemsDb } from '../data/itemsDb'; // Import the database
 
 export default function InventoryScreen({ route, navigation }) {
-	// Recibimos qué slot estamos editando (ej. 'helmet', 'weapon')
+	// Receive which slot we're editing (e.g., 'helmet', 'weapon')
 	const { slotName, currentEquippedId } = route.params;
 
-	// 1. FILTRAR: Solo mostramos items que correspondan a este slot
-	// (Si es 'glovesL' o 'glovesR', buscamos items tipo 'gloves')
+	// 1. FILTER: Show only items that match this slot
+	// (If it's 'glovesL' or 'glovesR', we search for 'gloves')
 	const filterSlot = slotName.includes('gloves') ? 'gloves' : slotName;
 
 	const availableItems = itemsDb.filter((item) => item.slot === filterSlot);
 
-	// Función para renderizar cada item de la lista
+	// Function to render each item in the list
 	const renderItem = ({ item }) => {
 		const isEquipped = item.id === currentEquippedId;
 
@@ -27,7 +27,7 @@ export default function InventoryScreen({ route, navigation }) {
 			<TouchableOpacity
 				style={[styles.itemCard, isEquipped && styles.equippedCard]}
 				onPress={() => {
-					// AQUI VA LA MAGIA: Regresamos a la pantalla anterior con el item elegido
+					// MAGIC: Return to previous screen with selected item
 					navigation.navigate('Character', {
 						itemToEquip: item,
 						slotName: slotName,
@@ -40,7 +40,7 @@ export default function InventoryScreen({ route, navigation }) {
 				/>
 				<View style={styles.textContainer}>
 					<Text style={styles.itemName}>{item.name}</Text>
-					{/* Mostramos el primer stat que encontremos */}
+					{/* Show the first stat we find */}
 					<Text style={styles.itemStats}>
 						{Object.keys(item.stats)[0]}: {Object.values(item.stats)[0]}
 					</Text>
@@ -52,7 +52,7 @@ export default function InventoryScreen({ route, navigation }) {
 
 	return (
 		<View style={styles.container}>
-			<Text style={styles.title}>Inventario: {slotName.toUpperCase()}</Text>
+			<Text style={styles.title}>Inventory: {slotName.toUpperCase()}</Text>
 			<FlatList
 				data={availableItems}
 				renderItem={renderItem}
@@ -62,7 +62,7 @@ export default function InventoryScreen({ route, navigation }) {
 			<TouchableOpacity
 				style={styles.backButton}
 				onPress={() => navigation.goBack()}>
-				<Text style={styles.backButtonText}>Cancelar</Text>
+				<Text style={styles.backButtonText}>Cancel</Text>
 			</TouchableOpacity>
 		</View>
 	);

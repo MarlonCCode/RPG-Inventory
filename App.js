@@ -2,7 +2,7 @@ import { NavigationContainer } from '@react-navigation/native';
 import { createNativeStackNavigator } from '@react-navigation/native-stack';
 import { StatusBar } from 'expo-status-bar';
 import CharacterScreen from './src/screens/CharacterScreen';
-import InventoryScreen from './src/screens/InventoryScreen'; // <--- Importamos la nueva pantalla
+import InventoryScreen from './src/screens/InventoryScreen'; // <--- Import the new screen
 
 const Stack = createNativeStackNavigator();
 
@@ -11,13 +11,13 @@ export default function App() {
 		<NavigationContainer>
 			<StatusBar style="light" />
 			<Stack.Navigator screenOptions={{ headerShown: false }}>
-				{/* Pantalla 1: El Personaje */}
+				{/* Screen 1: Character */}
 				<Stack.Screen
 					name="Character"
 					component={CharacterScreen}
 				/>
 
-				{/* Pantalla 2: El Inventario */}
+				{/* Screen 2: Inventory */}
 				<Stack.Screen
 					name="Inventory"
 					component={InventoryScreen}
